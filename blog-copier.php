@@ -3,7 +3,7 @@
 Plugin Name: Blog Copier
 Plugin URI: http://wordpress.org/extend/plugins/blog-copier/
 Description: Enables superusers to copy existing sub blogs to new sub blogs.
-Version: 1.0.6
+Version: 1.0.7
 Author: Modern Tribe, Inc.
 Network: true
 Author URI: http://tri.be
@@ -251,6 +251,7 @@ if ( !class_exists('BlogCopier') ) {
 					}
 					$msg = sprintf(__( 'Copied: %s in %s seconds', $this->_domain ),'<a href="http://'.$newdomain.'" target="_blank">'.$title.'</a>', number_format_i18n(timer_stop()));
 					do_action( 'log', __( 'Copy Complete!', $this->_domain ), $this->_domain, $msg );
+					do_action( 'copy_blog_complete', $from_blog_id, $to_blog_id );
 				}
 			} else {
 				$msg = $to_blog_id->get_error_message();
