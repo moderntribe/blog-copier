@@ -3,7 +3,7 @@
 Plugin Name: Blog Copier
 Plugin URI: http://wordpress.org/extend/plugins/blog-copier/
 Description: Enables superusers to copy existing sub blogs to new sub blogs.
-Version: 1.0.3
+Version: 1.0.4
 Author: Modern Tribe, Inc.
 Network: true
 Author URI: http://tri.be
@@ -203,7 +203,7 @@ if ( !class_exists('BlogCopier') ) {
 		 * @param bool $copy_files true if files should be copied
 		 * @return string status message
 		 */
-		private function copy_blog($domain, $title, $from_blog_id = 0, $copy_files = true) {
+		public function copy_blog($domain, $title, $from_blog_id = 0, $copy_files = true) {
 			global $wpdb, $current_site, $base;
 
 			$email = get_blog_option( $from_blog_id, 'admin_email' );
@@ -343,15 +343,25 @@ if ( !class_exists('BlogCopier') ) {
 		 * @param int $to_blog_id ID of the blog being copied to.
 		 */
 		private function copy_blog_files( $from_blog_id, $to_blog_id ) {
-			set_time_limit( 600 ); // 60 seconds x 10 minutes
+			set_time_limit( 2400 ); // 60 seconds x 10 minutes
 			@ini_set('memory_limit','2048M');
-			$base = WP_CONTENT_DIR . '/blogs.dir/';
+
 			// Path to source blog files.
-			$from = apply_filters('copy_blog_files_from', trailingslashit( $base . $from_blog_id ), $base, $from_blog_id);
+			switch_to_blog($from_blog_id);
+			$dir_info = wp_upload_dir();
+			$from = str_replace(' ', "\\ ", trailingslashit($dir_info['basedir']).'*'); // * necessary with GNU cp, doesn't hurt anything with BSD cp
+			restore_current_blog();
+			$from = apply_filters('copy_blog_files_from', $from, $from_blog_id);
+
 			// Path to destination blog files.
-			$to = apply_filters('copy_blog_files_to', trailingslashit( $base . $to_blog_id ), $base, $to_blog_id);
+			switch_to_blog($to_blog_id);
+			$dir_info = wp_upload_dir();
+			$to = str_replace(' ', "\\ ", trailingslashit($dir_info['basedir']));
+			restore_current_blog();
+			$to = apply_filters('copy_blog_files_to', $to, $to_blog_id);
+
 			// Shell command used to copy files.
-			$command = apply_filters('copy_blog_files_command', "cp -rfp $from $to", $from, $to );
+			$command = apply_filters('copy_blog_files_command', sprintf("cp -Rfp %s %s", $from, $to), $from, $to );
 			exec($command);
 		}
 
