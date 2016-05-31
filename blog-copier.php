@@ -3,12 +3,12 @@
 Plugin Name: Blog Copier
 Plugin URI: http://wordpress.org/extend/plugins/blog-copier/
 Description: Enables superusers to copy existing sub blogs to new sub blogs.
-Version: 1.0.5
+Version: 1.0.6
 Author: Modern Tribe, Inc.
 Network: true
 Author URI: http://tri.be
 
-Copyright: (C) 2012 Modern Tribe derived from (C) 2010 Ron Rennick, All rights reserved.
+Copyright: (C) 2014 Modern Tribe derived from (C) 2010 Ron Rennick, All rights reserved.
 
 See http://wpebooks.com/replicator/ for original code.
 
@@ -311,8 +311,13 @@ if ( !class_exists('BlogCopier') ) {
 					$wpdb->get_results($query);
 				}
 
-				// apply key opptions from new blog.
 				switch_to_blog( $to_blog_id );
+
+				// caches will be incorrect after direct DB copies
+				wp_cache_delete( 'notoptions', 'options' );
+				wp_cache_delete( 'alloptions', 'options' );
+
+				// apply key options from new blog.
 				foreach( $saved_options as $option_name => $option_value ) {
 					update_option( $option_name, $option_value );
 				}
@@ -326,7 +331,10 @@ if ( !class_exists('BlogCopier') ) {
 						$raw_option_name = substr($option->option_name,$from_blog_prefix_length);
 						$wpdb->update( $wpdb->options, array( 'option_name' => $to_blog_prefix . $raw_option_name ), array( 'option_id' => $option->option_id ) );
 					}
-					wp_cache_flush();
+
+					// caches will be incorrect after direct DB copies
+					wp_cache_delete( 'notoptions', 'options' );
+					wp_cache_delete( 'alloptions', 'options' );
 				}
 
 				// Fix GUIDs on copied posts
