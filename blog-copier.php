@@ -2,8 +2,8 @@
 /*
 Plugin Name: Blog Copier
 Plugin URI: http://wordpress.org/extend/plugins/blog-copier/
-Description: Allows superadmin users to copy existing sub blogs to new sub blogs.
-Version: 1.0
+Description: Enables superusers to copy existing sub blogs to new sub blogs.
+Version: 1.0.1
 Author: Modern Tribe, Inc.
 Network: true
 Author URI: http://tri.be

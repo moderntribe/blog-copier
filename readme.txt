@@ -4,9 +4,9 @@ Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: copy, duplicate, replicate, blog, site, duplicator, replicator, moderntribe, tribe, wpmu, multisite, network, superadmin
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 
-Description: Allows superadmin users to copy existing sub blogs to new sub blogs.
+Enables superusers to copy existing sub blogs to new sub blogs.
 
 == Description ==
 
@@ -15,6 +15,16 @@ A simple and effective approach to copying blogs within a multisite network.
 * Copy a blog including all its widgets, template settings and more.
 * Option to copy or not copy files.
 * GUIDs and urls in post contents are migrated automatically.
+
+This plugin was derived from Ron Renneck's awesome WP Replicator (http://wpebooks.com/replicator/) plugin, although it's been 90% rewritten. Changes from the original include the following:
+
+* Improved performance on large scale blogs.
+* Improved file copy performance and an option in the admin to bypass copying altogether.
+* Removed limit of number of blogs that can be used as a copy source.
+* Encapsulated the code in a Class and renamed variables to be more readable.
+* Revised UI to keep it simple and easy to use.
+
+Sadly the WordPress file management code is not idea for handling the copying of a large folder with subdirectories so we opted to stick with exec('cp'). On the flip side, we set up a filter (copy_blog_files_command) so that you can override it with your own custom copy code.
 
 This plugin is actively supported and we will do our best to help you. In return we simply as 3 things:
 
@@ -46,6 +56,10 @@ It's pretty straight forward. Select the blog you want to copy. Set a new domain
 This DOES NOT copy blogs across networks, back up blogs off the network, or copy the master blog. This also does NOT copy users from one blog to another.
 
 == Changelog ==
+
+= 1.0.1 =
+
+Minor documentation updates.
 
 = 1.0 =
 
