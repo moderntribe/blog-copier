@@ -91,8 +91,7 @@ if ( !class_exists('BlogCopier') ) {
 
 			$from_blog = false;
 			$copy_id = 0;
-			$nonce_string = sprintf( '%s-%s', $this->_domain, $copy_id );
-			if( isset($_GET['blog']) && wp_verify_nonce( $_GET['_wpnonce'], $nonce_string ) ) {
+			if( isset($_GET['blog']) && wp_verify_nonce( $_GET['_wpnonce'], sprintf( '%s-%s', $this->_domain, $_GET['blog'] ) ) ) {
 				$copy_id = (int)$_GET['blog'];
 				$from_blog = get_blog_details( $copy_id );
 				if( $from_blog->site_id != $current_site->id ) {
