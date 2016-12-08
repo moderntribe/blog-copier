@@ -119,6 +119,12 @@ if ( !class_exists('BlogCopier') ) {
 				}
 			} else {
 				$copy_files = true; // set the default for first page load
+				if ( $from_blog_id === -1 ) {
+					$last_copy = get_site_option( 'copy_blog_latest', array() );
+					if ( is_array( $last_copy ) && ! empty( $last_copy[ 'from_id' ] ) ) {
+						$from_blog_id = (int) $last_copy[ 'from_id' ];
+					}
+				}
 			} ?>
 			<div class='wrap'><h2><?php echo $this->_name; ?></h2><?php
 
@@ -249,6 +255,13 @@ if ( !class_exists('BlogCopier') ) {
 						$this->replace_content_urls( $from_blog_id, $to_blog_id );
 
 					}
+
+					update_site_option( 'copy_blog_latest', array(
+						'from_id' => $from_blog_id,
+						'to_id'   => $to_blog_id,
+						'domain'  => $newdomain,
+						'path'    => $path,
+					) );
 					$msg = sprintf(__( 'Copied: %s in %s seconds', $this->_domain ),'<a href="http://'.$newdomain.'" target="_blank">'.$title.'</a>', number_format_i18n(timer_stop()));
 					do_action( 'log', __( 'Copy Complete!', $this->_domain ), $this->_domain, $msg );
 					do_action( 'copy_blog_complete', $from_blog_id, $to_blog_id );
