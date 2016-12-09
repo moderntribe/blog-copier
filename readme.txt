@@ -57,6 +57,11 @@ This DOES NOT copy blogs across networks, back up blogs off the network, or copy
 
 == Changelog ==
 
+= 1.1 =
+
+* Remember the last source blog to use as the default for the next copy
+* Fix broken nonce validation from the "Copy" link in the sites lists
+
 = 1.0.7 =
 
 * Add 'copy_blog_complete' action. (thanks @mat-lipe)
