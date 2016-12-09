@@ -4,7 +4,7 @@ Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: copy, duplicate, replicate, blog, site, duplicator, replicator, moderntribe, tribe, wpmu, multisite, network, superadmin
 Requires at least: 3.0
 Tested up to: 3.9.2
-Stable tag: 1.0.7
+Stable tag: 1.1
 
 Enables superusers to copy existing sub blogs to new sub blogs.
 
