@@ -3,7 +3,7 @@
 Plugin Name: Blog Copier
 Plugin URI: http://wordpress.org/extend/plugins/blog-copier/
 Description: Enables superusers to copy existing sub blogs to new sub blogs.
-Version: 1.0.7
+Version: 1.1
 Author: Modern Tribe, Inc.
 Network: true
 Author URI: http://tri.be
@@ -91,8 +91,7 @@ if ( !class_exists('BlogCopier') ) {
 
 			$from_blog = false;
 			$copy_id = 0;
-			$nonce_string = sprintf( '%s-%s', $this->_domain, $copy_id );
-			if( isset($_GET['blog']) && wp_verify_nonce( $_GET['_wpnonce'], $nonce_string ) ) {
+			if( isset($_GET['blog']) && wp_verify_nonce( $_GET['_wpnonce'], sprintf( '%s-%s', $this->_domain, $_GET['blog'] ) ) ) {
 				$copy_id = (int)$_GET['blog'];
 				$from_blog = get_blog_details( $copy_id );
 				if( $from_blog->site_id != $current_site->id ) {
@@ -119,6 +118,12 @@ if ( !class_exists('BlogCopier') ) {
 				}
 			} else {
 				$copy_files = true; // set the default for first page load
+				if ( $from_blog_id === -1 ) {
+					$last_copy = get_site_option( 'copy_blog_latest', array() );
+					if ( is_array( $last_copy ) && ! empty( $last_copy[ 'from_id' ] ) ) {
+						$from_blog_id = (int) $last_copy[ 'from_id' ];
+					}
+				}
 			} ?>
 			<div class='wrap'><h2><?php echo $this->_name; ?></h2><?php
 
@@ -249,6 +254,13 @@ if ( !class_exists('BlogCopier') ) {
 						$this->replace_content_urls( $from_blog_id, $to_blog_id );
 
 					}
+
+					update_site_option( 'copy_blog_latest', array(
+						'from_id' => $from_blog_id,
+						'to_id'   => $to_blog_id,
+						'domain'  => $newdomain,
+						'path'    => $path,
+					) );
 					$msg = sprintf(__( 'Copied: %s in %s seconds', $this->_domain ),'<a href="http://'.$newdomain.'" target="_blank">'.$title.'</a>', number_format_i18n(timer_stop()));
 					do_action( 'log', __( 'Copy Complete!', $this->_domain ), $this->_domain, $msg );
 					do_action( 'copy_blog_complete', $from_blog_id, $to_blog_id );
