@@ -168,7 +168,7 @@ if ( !class_exists('BlogCopier') ) {
 								<th scope='row'><?php _e( 'New Blog Address', $this->_domain ); ?></th>
 								<td>
 								<?php if( is_subdomain_install() ) { ?>
-									<input name="blog[domain]" type="text" title="<?php _e( 'Subdomain', $this->_domain ); ?>" class="regular-text"/>.<?php echo $current_site->domain;?>
+									<input name="blog[domain]" type="text" title="<?php _e( 'Subdomain', $this->_domain ); ?>" class="regular-text"/>.<?php echo preg_replace( '|^www\.|', '', $current_site->domain );?>
 								<?php } else {
 									echo $current_site->domain . $current_site->path ?><input name="blog[domain]" type="text" title="<?php _e( 'Domain', $this->_domain ); ?>" class="regular-text"/>
 								<?php } ?>
@@ -221,7 +221,7 @@ if ( !class_exists('BlogCopier') ) {
 			$user_id = apply_filters('copy_blog_user_id', $user_id, $from_blog_id);
 
 			if( is_subdomain_install() ) {
-				$newdomain = $domain.".".$current_site->domain;
+				$newdomain = $domain . "." . preg_replace( '|^www\.|', '', $current_site->domain );
 				$path = $base;
 			} else {
 				$newdomain = $current_site->domain;
