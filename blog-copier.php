@@ -381,9 +381,6 @@ if ( !class_exists('BlogCopier') ) {
 			restore_current_blog();
 			$to = apply_filters('copy_blog_files_to', $to, $to_blog_id);
 
-			// Shell command used to copy files.
-			//$command = apply_filters('copy_blog_files_command', sprintf("cp -Rfp %s %s", $from, $to), $from, $to );
-			//exec($command);
 			$this->rcopy( $from, $to );
 		}
 		
@@ -397,9 +394,9 @@ if ( !class_exists('BlogCopier') ) {
 
 		    // If source is not a directory stop processing
 		    if ( !is_dir( $src ) ) {
-				error_log( "Blog copier failed; $src is not a directory." );
-				return false;
-			} 
+			error_log( "Blog copier failed; $src is not a directory." );
+			return false;
+		    } 
 
 		    // If the destination directory does not exist create it
 		    if ( !is_dir( $dest ) ) { 
@@ -414,9 +411,8 @@ if ( !class_exists('BlogCopier') ) {
 		    $srcfiles = new DirectoryIterator( $src );
 		    foreach ( $srcfiles as $file ) {
 		        if ( $file->isFile() ) {
-			    error_log( "Blog copier is copying " . $file->getFilename() );
-		            copy( $file->getRealPath(), "$dest/" . $file->getFilename() );
-		        } else if( !$file->isDot() && $file->isDir() ) {
+			    copy( $file->getRealPath(), "$dest/" . $file->getFilename() );
+		        } else if ( !$file->isDot() && $file->isDir() ) {
 		            $this->rcopy( $file->getRealPath(), "$dest/$file" );
 		        }
 		    }
