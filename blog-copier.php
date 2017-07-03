@@ -370,7 +370,7 @@ if ( !class_exists('BlogCopier') ) {
 			// Path to source blog files.
 			switch_to_blog($from_blog_id);
 			$dir_info = wp_upload_dir();
-			$from = str_replace(' ', "\\ ", trailingslashit($dir_info['basedir']).'*'); // * necessary with GNU cp, doesn't hurt anything with BSD cp
+			$from = str_replace(' ', "\\ ", trailingslashit($dir_info['basedir']));
 			restore_current_blog();
 			$from = apply_filters('copy_blog_files_from', $from, $from_blog_id);
 
